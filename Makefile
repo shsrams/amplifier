@@ -25,6 +25,7 @@ help: ## Show this help message
 	@echo "Development:"
 	@echo "  make check          Format, lint, and type-check all code"
 	@echo "  make worktree NAME   Create git worktree with .data copy"
+	@echo "  make worktree-list   List all git worktrees"
 	@echo "  make worktree-rm NAME  Remove worktree and delete branch"
 	@echo "  make worktree-rm-force NAME  Force remove (even with changes)"
 	@echo ""
@@ -116,6 +117,9 @@ worktree-rm-force: ## Force remove a git worktree (even with changes). Usage: ma
 	fi
 	@python tools/remove_worktree.py "$(filter-out $@,$(MAKECMDGOALS))" --force
 
+worktree-list: ## List all git worktrees
+	@git worktree list
+
 # Azure Automation
 .PHONY: azure-create azure-create-managed azure-teardown azure-status
 
@@ -187,11 +191,8 @@ db-status: ## Show database connection status
 # Catch-all target to handle branch names for worktree functionality
 # and show error for invalid commands
 %:
-	@# Check if this looks like a branch name (for worktree functionality)
-	@if echo "$@" | grep -qE '/' || \
-	   echo "$@" | grep -qE '^(feature|fix|worktree|release|hotfix|develop|main|master)-' || \
-	   echo "$@" | grep -qE '^v[0-9]' || \
-	   [ "$@" = "main" ] || [ "$@" = "master" ] || [ "$@" = "develop" ]; then \
+	@# If this is part of a worktree command, accept any branch name
+	@if echo "$(MAKECMDGOALS)" | grep -qE '^(worktree|worktree-rm|worktree-rm-force)\b'; then \
 		: ; \
 	else \
 		echo "Error: Unknown command '$@'. Run 'make help' to see available commands."; \
