@@ -1,0 +1,88 @@
+[project]
+name = "workspace"
+version = "0.1.0"
+description = "Workspace project"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "chromadb>=0.5.4",
+    "claude-code-sdk>=0.0.20",
+    "click>=8.2.1",
+    "eval-recipes",
+    "flask>=3.1.2",
+    "langchain>=0.2.1",
+    "langchain-chroma>=0.2.5",
+    "langchain-community>=0.3.27",
+    "langchain-huggingface>=0.3.1",
+    "langchain-openai>=0.3.28",
+    "markdownify>=1.1.0",
+    "networkx>=3.5",
+    "numpy>=2.3.2",
+    "plotly>=6.3.0",
+    "psycopg2-binary>=2.9.10",
+    "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "python-louvain>=0.16",
+    "pyvis>=0.3.2",
+    "rapidfuzz>=3.13.0",
+    "requests>=2.32.4",
+    "sentence-transformers>=3.0.1",
+    "tiktoken>=0.9.0",
+    "tqdm>=4.67.1",
+    "unstructured[md]>=0.18.11",
+]
+
+[tool.uv.workspace]
+# Add all projects in the workspace
+members = []
+
+[tool.uv.sources]
+eval-recipes = { git = "https://github.com/microsoft/eval-recipes.git" }
+# Example: my-project = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "debugpy>=1.8.14",
+    "playwright>=1.54.0",
+    "pyright>=1.1.405",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.11.10",
+    "twine>=6.1.0",
+]
+azure = ["azure-identity>=1.24.0"]
+slides-exports = ["playwright>=1.54.0"]
+claude-web = [
+    "fastapi>=0.115.6",
+    "uvicorn[standard]>=0.34.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-multipart>=0.0.20",
+    "sqlalchemy>=2.0.37",
+    "sse-starlette>=2.2.1",
+    "aiohttp>=3.12.15",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+exclude = [
+    "**/__pycache__",
+    ".venv/**",
+    "node_modules/**",
+    "claude-web/**",
+    ".git/**",
+    ".ruff_cache/**",
+    ".pytest_cache/**",
+    "*.egg-info",
+    "build/**",
+    "dist/**",
+    ".data/**",
+    "ai_working/**"
+]
+typeCheckingMode = "basic"
+reportMissingImports = false
+pythonVersion = "3.11"
