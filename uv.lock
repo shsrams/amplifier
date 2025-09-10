@@ -4617,9 +4617,6 @@ dev = [
     { name = "ruff" },
     { name = "twine" },
 ]
-slides-exports = [
-    { name = "playwright" },
-]
 
 [package.metadata]
 requires-dist = [
@@ -4665,7 +4662,6 @@ dev = [
     { name = "ruff", specifier = ">=0.11.10" },
     { name = "twine", specifier = ">=6.1.0" },
 ]
-slides-exports = [{ name = "playwright", specifier = ">=1.54.0" }]
 
 [[package]]
 name = "wrapt"
