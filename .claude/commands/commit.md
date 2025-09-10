@@ -34,7 +34,7 @@ Or with options:
 4. Performs a `git diff` to understand what changes are being committed
 5. Analyzes the diff to determine if multiple distinct logical changes are present
 6. If multiple distinct changes are detected, suggests breaking the commit into multiple smaller commits
-7. For each commit (or the single commit if not split), creates a commit message using emoji conventional commit format
+7. For each commit (or the single commit if not split), creates a commit message using conventional commit format and considering the available conversation history for additional context as appropriate
 
 ## Best Practices for Commits
 
@@ -52,4 +52,5 @@ Or with options:
   - `test`: Adding or fixing tests
   - `chore`: Changes to the build process, tools, etc.
 - **Present tense, imperative mood**: Write commit messages as commands (e.g., "add feature" not "added feature")
+- **Leverage context**: Use conversation history to inform commit messages when relevant, especially where the content of the conversation could be useful for understanding the intent of the changes when reviewing the full commit history later, especially when reviewed by other AI tools that are attempting to understand the context behind the changes to understand rationale, decision making, intent, problem being solved, etc.
 - **Concise first line**: Keep the first line under 72 characters
