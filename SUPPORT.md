@@ -18,5 +18,3 @@ This is experimental software shared openly but without any support infrastructu
 ## Microsoft Support Policy
 
 This experimental project is not covered by any Microsoft support plans or services.
-
----
