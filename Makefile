@@ -31,6 +31,7 @@ default: ## Show essential commands
 	@echo "Development:"
 	@echo "  make check          Format, lint, and type-check all code"
 	@echo "  make test           Run all tests"
+	@echo "  make smoke-test     Run quick smoke tests (< 2 minutes)"
 	@echo "  make worktree NAME   Create git worktree with .data copy"
 	@echo "  make worktree-list   List all git worktrees"
 	@echo "  make worktree-rm NAME  Remove worktree and delete branch"
@@ -87,6 +88,7 @@ help: ## Show ALL available commands
 	@echo "DEVELOPMENT:"
 	@echo "  make check           Format, lint, and type-check code"
 	@echo "  make test            Run all tests (alias: pytest)"
+	@echo "  make smoke-test      Run quick smoke tests (< 2 minutes)"
 	@echo "  make worktree NAME   Create git worktree with .data copy"
 	@echo "  make worktree-list   List all git worktrees"
 	@echo "  make worktree-rm NAME  Remove worktree and delete branch"
@@ -168,6 +170,11 @@ test: ## Run all tests
 	@echo "Running tests..."
 	uv run pytest
 
+smoke-test: ## Run quick smoke tests to verify basic functionality
+	@echo "Running smoke tests..."
+	@PYTHONPATH=. python -m amplifier.smoke_tests
+	@echo "Smoke tests complete!"
+
 # Git worktree management
 worktree: ## Create a git worktree with .data copy. Usage: make worktree feature-name
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
@@ -229,7 +236,7 @@ knowledge-sync: ## Extract knowledge from all content files
 knowledge-sync-batch: ## Extract knowledge from next N articles. Usage: make knowledge-sync-batch N=5
 	@n="$${N:-5}"; \
 	echo "Processing next $$n articles..."; \
-	uv run python -m amplifier.knowledge_synthesis.cli sync --max-articles $$n
+	uv run python -m amplifier.knowledge_synthesis.cli sync --max-items $$n
 
 knowledge-search: ## Search extracted knowledge. Usage: make knowledge-search Q="AI agents"
 	@if [ -z "$(Q)" ]; then \
