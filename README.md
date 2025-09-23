@@ -134,6 +134,8 @@ make worktree-rm feature-jwt  # Remove the one you don't want
 
 Each worktree is completely isolated with its own branch, environment, and context.
 
+See the [Worktree Guide](docs/WORKTREE_GUIDE.md) for advanced features, such as hiding worktrees from VSCode when not in use, adopting branches from other machines, and more.
+
 ### Enhanced Status Line
 
 See costs, model, and session info at a glance:

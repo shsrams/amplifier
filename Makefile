@@ -34,6 +34,8 @@ default: ## Show essential commands
 	@echo "  make smoke-test     Run quick smoke tests (< 2 minutes)"
 	@echo "  make worktree NAME   Create git worktree with .data copy"
 	@echo "  make worktree-list   List all git worktrees"
+	@echo "  make worktree-stash NAME  Hide worktree (keeps directory)"
+	@echo "  make worktree-adopt BRANCH  Create worktree from remote"
 	@echo "  make worktree-rm NAME  Remove worktree and delete branch"
 	@echo ""
 	@echo "AI Context:"
@@ -91,8 +93,12 @@ help: ## Show ALL available commands
 	@echo "  make smoke-test      Run quick smoke tests (< 2 minutes)"
 	@echo "  make worktree NAME   Create git worktree with .data copy"
 	@echo "  make worktree-list   List all git worktrees"
+	@echo "  make worktree-stash NAME  Hide worktree (keeps directory)"
+	@echo "  make worktree-adopt BRANCH  Create worktree from remote"
 	@echo "  make worktree-rm NAME  Remove worktree and delete branch"
 	@echo "  make worktree-rm-force NAME  Force remove (with changes)"
+	@echo "  make worktree-unstash NAME  Restore hidden worktree"
+	@echo "  make worktree-list-stashed  List all hidden worktrees"
 	@echo ""
 	@echo "SYNTHESIS:"
 	@echo "  make synthesize query=\"...\" files=\"...\"  Run synthesis"
@@ -197,11 +203,35 @@ worktree-rm-force: ## Force remove a git worktree (even with changes). Usage: ma
 worktree-list: ## List all git worktrees
 	@git worktree list
 
+worktree-stash: ## Hide a worktree from git (keeps directory). Usage: make worktree-stash feature-name
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Error: Please provide a worktree name. Usage: make worktree-stash feature-name"; \
+		exit 1; \
+	fi
+	@python tools/worktree_manager.py stash "../amplifier.$(filter-out $@,$(MAKECMDGOALS))"
+
+worktree-unstash: ## Restore a hidden worktree. Usage: make worktree-unstash feature-name
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Error: Please provide a worktree name. Usage: make worktree-unstash feature-name"; \
+		exit 1; \
+	fi
+	@python tools/worktree_manager.py unstash "../amplifier.$(filter-out $@,$(MAKECMDGOALS))"
+
+worktree-adopt: ## Create worktree from remote branch. Usage: make worktree-adopt branch-name
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Error: Please provide a branch name. Usage: make worktree-adopt branch-name"; \
+		exit 1; \
+	fi
+	@python tools/worktree_manager.py adopt "$(filter-out $@,$(MAKECMDGOALS))"
+
+worktree-list-stashed: ## List all hidden worktrees
+	@python tools/worktree_manager.py list-stashed
+
 # Catch-all target to handle branch names for worktree functionality
 # and show error for invalid commands
 %:
 	@# If this is part of a worktree command, accept any branch name
-	@if echo "$(MAKECMDGOALS)" | grep -qE '^(worktree|worktree-rm|worktree-rm-force)\b'; then \
+	@if echo "$(MAKECMDGOALS)" | grep -qE '^(worktree|worktree-rm|worktree-rm-force|worktree-stash|worktree-unstash|worktree-adopt)\b'; then \
 		: ; \
 	else \
 		echo "Error: Unknown command '$@'. Run 'make help' to see available commands."; \
