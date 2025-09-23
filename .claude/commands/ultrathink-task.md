@@ -149,6 +149,8 @@ Ask these questions to identify amplifier CLI tool needs:
 
 **If 2+ answers are "yes" to questions 1-2, use amplifier-cli-architect first and proactively.**
 
+**ALWAYS include use amplifier-cli-architect if the topic of using ccsdk or ccsdk_toolkit comes up, it is the expert on the subject and can provide all of the context you need**
+
 ### **Tool Lifecycle Management**
 
 Consider whether tools should be:
