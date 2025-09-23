@@ -189,7 +189,7 @@ def _meta_from_payload(session_id: str, event: dict[str, Any]) -> SessionMeta:
 def _parse_timestamp(value: str | None) -> datetime:
     if not value:
         return datetime.fromtimestamp(0, tz=UTC)
-    if isinstance(value, (int, float)):
+    if isinstance(value, int | float):
         return datetime.fromtimestamp(float(value), tz=UTC)
     if value.endswith("Z"):
         value = value[:-1] + "+00:00"
@@ -548,7 +548,7 @@ def collect_events(
 
 def _extract_event_timestamp(item: dict[str, Any], fallback_start: datetime, index: int) -> datetime:
     timestamp = item.get("timestamp") or item.get("created_at") or item.get("ts")
-    if isinstance(timestamp, (int, float)):
+    if isinstance(timestamp, int | float):
         return datetime.fromtimestamp(float(timestamp), tz=UTC)
     if isinstance(timestamp, str):
         parsed = _parse_timestamp(timestamp)
@@ -625,7 +625,7 @@ def _role_from_event_msg(payload_type: str | None) -> str | None:
 def _maybe_parse_json(value: Any) -> Any | None:
     if value is None:
         return None
-    if isinstance(value, (dict, list)):
+    if isinstance(value, dict | list):
         return value
     if isinstance(value, str):
         stripped = value.strip()
