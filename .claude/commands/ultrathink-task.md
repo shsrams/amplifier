@@ -71,6 +71,7 @@ For complex tasks, use this three-phase cycle:
 1. **Architecture Phase**: zen-architect or amplifier-cli-architect designs the approach
 2. **Implementation Phase**: modular-builder, api-contract-designer, etc. implement
 3. **Validation Phase**: Return to architectural agents for compliance review
+4. **Testing Phase**: Run it like a user, if any issues discovered then leverage bug-hunter
 
 ### **When to Loop Back for Validation**
 
