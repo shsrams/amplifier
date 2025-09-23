@@ -6,7 +6,7 @@ Usage:
     python tools/create_worktree.py <branch-name>
 
 This will:
-1. Create a worktree in ../repo-name-branch-name/
+1. Create a worktree in ../repo-name.branch-name/
 2. Copy .data/ directory contents efficiently using rsync
 3. Set up a local .venv for the worktree using uv
 4. Output instructions to navigate and activate the venv
@@ -102,12 +102,15 @@ def main():
 
     branch_name = sys.argv[1]
 
+    # Extract feature name (part after last '/' if present, otherwise full name)
+    feature_name = branch_name.split("/")[-1] if "/" in branch_name else branch_name
+
     # Get current repo path and name
     current_path = Path.cwd()
     repo_name = current_path.name
 
-    # Build worktree path
-    worktree_name = f"{repo_name}-{branch_name}"
+    # Build worktree path using feature name for directory
+    worktree_name = f"{repo_name}.{feature_name}"
     worktree_path = current_path.parent / worktree_name
 
     # Create the worktree
