@@ -53,6 +53,34 @@ class WorktreeManager:
             print(f"Error saving manifest: {e}")
             sys.exit(1)
 
+    def _get_repo_name(self) -> str:
+        """Get the repository name from git."""
+        code, stdout, _ = self._run_git("rev-parse", "--show-toplevel")
+        if code == 0:
+            return Path(stdout.strip()).name
+        return "repo"
+
+    def resolve_worktree_path(self, feature_name: str) -> Path | None:
+        """Resolve worktree path from feature name.
+
+        Checks for existing worktrees with dot separator first, then hyphen.
+        Returns the resolved path or None if not found.
+        """
+        repo_name = self._get_repo_name()
+        main_repo = Path.cwd()
+
+        # Try dot separator first (new format)
+        dot_path = main_repo.parent / f"{repo_name}.{feature_name}"
+        if dot_path.exists():
+            return dot_path
+
+        # Fall back to hyphen separator (old format)
+        hyphen_path = main_repo.parent / f"{repo_name}-{feature_name}"
+        if hyphen_path.exists():
+            return hyphen_path
+
+        return None
+
     def _get_worktree_info(self, path: str) -> dict | None:
         """Get worktree information for a given path."""
         code, stdout, _ = self._run_git("worktree", "list", "--porcelain")
@@ -79,6 +107,26 @@ class WorktreeManager:
             return current_worktree
 
         return None
+
+    def stash_by_name(self, feature_name: str) -> None:
+        """Stash a worktree by feature name."""
+        path = self.resolve_worktree_path(feature_name)
+        if not path:
+            print(f"Error: Worktree not found for feature: {feature_name}")
+            print(f"  Looked for: {self._get_repo_name()}.{feature_name}")
+            print(f"  And: {self._get_repo_name()}-{feature_name}")
+            sys.exit(1)
+        self.stash(str(path))
+
+    def unstash_by_name(self, feature_name: str) -> None:
+        """Unstash a worktree by feature name."""
+        path = self.resolve_worktree_path(feature_name)
+        if not path:
+            print(f"Error: Worktree not found for feature: {feature_name}")
+            print(f"  Looked for: {self._get_repo_name()}.{feature_name}")
+            print(f"  And: {self._get_repo_name()}-{feature_name}")
+            sys.exit(1)
+        self.unstash(str(path))
 
     def stash(self, worktree_path: str) -> None:
         """Stash a worktree - hide from git but keep directory."""
@@ -311,10 +359,12 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: worktree_manager.py <command> [args]")
         print("\nCommands:")
-        print("  stash <path>        Hide worktree from git tracking")
-        print("  unstash <path>      Restore stashed worktree")
-        print("  adopt <branch>      Create worktree from remote branch")
-        print("  list-stashed        Show all stashed worktrees")
+        print("  stash <path>          Hide worktree from git tracking")
+        print("  stash-by-name <name>  Hide worktree by feature name")
+        print("  unstash <path>        Restore stashed worktree")
+        print("  unstash-by-name <name> Restore worktree by feature name")
+        print("  adopt <branch>        Create worktree from remote branch")
+        print("  list-stashed          Show all stashed worktrees")
         sys.exit(1)
 
     manager = WorktreeManager()
@@ -326,11 +376,23 @@ def main():
             sys.exit(1)
         manager.stash(sys.argv[2])
 
+    elif command == "stash-by-name":
+        if len(sys.argv) < 3:
+            print("Error: stash-by-name requires a feature name")
+            sys.exit(1)
+        manager.stash_by_name(sys.argv[2])
+
     elif command == "unstash":
         if len(sys.argv) < 3:
             print("Error: unstash requires a worktree path")
             sys.exit(1)
         manager.unstash(sys.argv[2])
+
+    elif command == "unstash-by-name":
+        if len(sys.argv) < 3:
+            print("Error: unstash-by-name requires a feature name")
+            sys.exit(1)
+        manager.unstash_by_name(sys.argv[2])
 
     elif command == "adopt":
         if len(sys.argv) < 3:

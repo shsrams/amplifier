@@ -184,7 +184,8 @@ worktree: ## Create a git worktree with .data copy. Usage: make worktree feature
 		echo "Error: Please provide a branch name. Usage: make worktree feature-name"; \
 		exit 1; \
 	fi
-	@python tools/create_worktree.py "$(filter-out $@,$(MAKECMDGOALS))"
+	@python tools/create_worktree.py $(filter-out $@,$(MAKECMDGOALS))
+
 
 worktree-rm: ## Remove a git worktree and delete branch. Usage: make worktree-rm feature-name
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
@@ -208,14 +209,14 @@ worktree-stash: ## Hide a worktree from git (keeps directory). Usage: make workt
 		echo "Error: Please provide a worktree name. Usage: make worktree-stash feature-name"; \
 		exit 1; \
 	fi
-	@python tools/worktree_manager.py stash "../amplifier.$(filter-out $@,$(MAKECMDGOALS))"
+	@python tools/worktree_manager.py stash-by-name "$(filter-out $@,$(MAKECMDGOALS))"
 
 worktree-unstash: ## Restore a hidden worktree. Usage: make worktree-unstash feature-name
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
 		echo "Error: Please provide a worktree name. Usage: make worktree-unstash feature-name"; \
 		exit 1; \
 	fi
-	@python tools/worktree_manager.py unstash "../amplifier.$(filter-out $@,$(MAKECMDGOALS))"
+	@python tools/worktree_manager.py unstash-by-name "$(filter-out $@,$(MAKECMDGOALS))"
 
 worktree-adopt: ## Create worktree from remote branch. Usage: make worktree-adopt branch-name
 	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
@@ -482,4 +483,3 @@ workspace-info: ## Show workspace information
 	@echo ""
 	$(call list_projects)
 	@echo ""
-
