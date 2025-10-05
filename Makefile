@@ -137,20 +137,12 @@ install: ## Install all dependencies
 	uv sync --group dev
 	@echo ""
 	@echo "Installing npm packages globally..."
-	@command -v pnpm >/dev/null 2>&1 || { echo "❌ pnpm required. Install: curl -fsSL https://get.pnpm.io/install.sh | sh -"; exit 1; }
-	@# Ensure pnpm global directory exists and is configured (handles non-interactive shells)
-	@PNPM_HOME=$$(pnpm bin -g 2>/dev/null || echo "$$HOME/.local/share/pnpm"); \
-	mkdir -p "$$PNPM_HOME" 2>/dev/null || true; \
-	PATH="$$PNPM_HOME:$$PATH" pnpm add -g @anthropic-ai/claude-code@latest || { \
-		echo "❌ Failed to install global packages. Trying pnpm setup..."; \
-		pnpm setup >/dev/null 2>&1 || true; \
-		echo "❌ Could not configure pnpm global directory automatically."; \
-		if [ -n "$$ZSH_VERSION" ] || [ "$$SHELL" = "/bin/zsh" ] || [ -f ~/.zshrc ]; then \
-			echo "   Please run: pnpm setup && source ~/.zshrc"; \
-		else \
-			echo "   Please run: pnpm setup && source ~/.bashrc"; \
-		fi; \
-		echo "   Then run: make install"; \
+	@command -v pnpm >/dev/null 2>&1 || { echo "  Installing pnpm..."; npm install -g pnpm; }
+	@pnpm add -g @anthropic-ai/claude-code@latest || { \
+		echo "❌ Failed to install global packages."; \
+		echo "   This may be a permissions issue. Try:"; \
+		echo "   1. Run: pnpm setup && source ~/.bashrc (or ~/.zshrc)"; \
+		echo "   2. Then run: make install"; \
 		exit 1; \
 	}
 	@echo ""
