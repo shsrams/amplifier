@@ -44,7 +44,7 @@
   // with port-specific entries in 'portsAttributes'.
   // "otherPortsAttributes": {},
   // "updateContentCommand": "make -C ${containerWorkspaceFolder} install",
-  // "postCreateCommand": "./.devcontainer/post-create.sh",
+  "postCreateCommand": "./.devcontainer/post-create.sh",
   // Configure tool-specific properties.
   "customizations": {
     "codespaces": {
