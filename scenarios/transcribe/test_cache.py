@@ -116,7 +116,6 @@ def test_cache_functionality():
         logger.info("✓ JSON metadata includes audio info correctly")
 
         logger.info("\n✅ All cache functionality tests passed!")
-        return True
 
 
 if __name__ == "__main__":

@@ -26,21 +26,48 @@ class TranscriptStorage:
         Args:
             output_dir: Base output directory (default: AMPLIFIER_CONTENT_DIRS/transcripts)
         """
+        # Track if we're in test mode (custom output directory provided)
+        self._test_mode = output_dir is not None
+
         if output_dir:
-            self.output_dir = output_dir
+            # Custom output directory (test scenario)
+            # Use the provided directory as base for both content and data
+            self._output_dir = output_dir
+            self._data_dir = output_dir  # In test mode, keep everything together
         else:
+            # Production scenario - use dual-directory architecture
             # Use first content directory if available, otherwise fall back to data_dir
             content_dirs = paths.get_all_content_paths()
             if content_dirs:
-                self.output_dir = content_dirs[0] / "transcripts"
+                self._output_dir = content_dirs[0] / "transcripts"
             else:
                 logger.warning("No content directories found, using .data/transcripts instead")
-                self.output_dir = paths.data_dir / "transcripts"
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+                self._output_dir = paths.data_dir / "transcripts"
 
-        # Add data dir for technical artifacts (JSON, VTT, SRT)
-        self.data_dir = paths.data_dir / "transcripts"
-        self.data_dir.mkdir(parents=True, exist_ok=True)
+            # In production, technical artifacts go to .data directory
+            self._data_dir = paths.data_dir / "transcripts"
+            self._data_dir.mkdir(parents=True, exist_ok=True)
+
+        self._output_dir.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def output_dir(self) -> Path:
+        """Get the output directory."""
+        return self._output_dir
+
+    @output_dir.setter
+    def output_dir(self, value: Path) -> None:
+        """Set the output directory. In test mode, also updates data_dir."""
+        self._output_dir = value
+        if self._test_mode:
+            # Keep data_dir synchronized with output_dir in test mode
+            self._data_dir = value
+        self._output_dir.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def data_dir(self) -> Path:
+        """Get the data directory."""
+        return self._data_dir
 
     def save(
         self,
