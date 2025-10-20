@@ -125,6 +125,10 @@ We've taken our learnings about what works in AI-assisted development and packag
 
 ## 📖 How to Use Amplifier
 
+### Create Amplifier-powered Tools for Scenarios
+
+Amplifier is designed so **you can create new AI-powered tools** just by describing how they should think. See the [Create Your Own Tools](docs/CREATE_YOUR_OWN_TOOLS.md) guide for more information.
+
 ### Explore Ampifier's agents on your code
 
 Try out one of the specialized experts:
