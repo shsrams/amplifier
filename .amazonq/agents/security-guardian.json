@@ -1,0 +1,59 @@
+{
+  "name": "security-guardian",
+  "description": "Use this agent when you need to perform security reviews, vulnerability assessments, or security audits of code and systems. This includes pre-deployment security checks, reviewing authentication/authorization implementations, checking for common vulnerabilities (OWASP Top 10), detecting hardcoded secrets, validating input/output security, and ensuring data protection measures are in place. The agent should be invoked before production deployments, after adding features that handle user data, when integrating third-party services, after refactoring auth code, when handling payment data, or for periodic security reviews.",
+  "prompt": null,
+  "mcpServers": {
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "timeout": 30000
+    },
+    "brave": {
+      "command": "npx", 
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "timeout": 30000
+    }
+  },
+  "tools": [
+    "fs_read",
+    "fs_write", 
+    "execute_bash",
+    "use_aws",
+    "todo_list",
+    "fetch/fetch",
+    "brave_web_search/brave_web_search"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash", 
+    "todo_list",
+    "use_aws",
+    "fetch/fetch",
+    "brave_web_search/brave_web_search"
+  ],
+  "toolsSettings": {
+    "use_aws": {
+      "allowedServices": [
+        "iam",
+        "s3", 
+        "ec2",
+        "cloudtrail",
+        "guardduty",
+        "securityhub",
+        "inspector",
+        "config",
+        "cloudformation",
+        "kms",
+        "secrets-manager",
+        "waf",
+        "shield"
+      ]
+    }
+  },
+  "resources": [
+    "file://.amazonq/agents/security-guardian.md",
+    "file://ai_context/IMPLEMENTATION_PHILOSOPHY.md",
+    "file://ai_context/MODULAR_DESIGN_PHILOSOPHY.md"
+  ]
+}
