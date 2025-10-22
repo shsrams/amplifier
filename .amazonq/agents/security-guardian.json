@@ -4,13 +4,8 @@
   "prompt": null,
   "mcpServers": {
     "fetch": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"],
-      "timeout": 30000
-    },
-    "brave": {
-      "command": "npx", 
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
       "timeout": 30000
     }
   },
